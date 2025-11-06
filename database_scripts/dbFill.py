@@ -97,8 +97,8 @@ def main(argv):
         userNames.append(str(d['data']['name']))
         userEmails.append(str(d['data']['email']))
 
-    # Open 'tasks.txt' for sample task names
-    f = open('tasks.txt','r')
+    # Open 'database_tasks.txt' for sample task names
+    f = open('database_scripts/tasks.txt','r')
     taskNames = f.read().splitlines()
 
     # Loop 'taskCount' number of times

@@ -7,4 +7,7 @@ node_modules
 node_modules/*
 public/
 public/*
-# .env
+.env
+tests/tasks.test.js
+tests/user.advanced.test.js
+tests/user.test.js
