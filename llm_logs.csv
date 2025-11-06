@@ -1,0 +1,442 @@
+Reviewing the task structure and existing tasks to generate more test tasks.
+Adding more diverse task names to tasks.txt for testing.
+Appending more diverse task names to tasks.txt for testing:
+Added 430 new tasks to tasks.txt, bringing the total from 310 to 740. The new tasks cover:
+Technical/Development: Code reviews, deployments, testing, security, performance optimization
+Professional: Career development, networking, certifications, presentations
+Personal: Health, fitness, home maintenance, family planning
+Financial: Budgeting, investments, taxes, insurance
+Project Management: Sprint planning, retrospectives, team coordination
+Learning: Courses, tutorials, skill development
+Life Balance: Self-care, relationships, hobbies
+The tasks are formatted as one per line, matching the existing format. The dbFill.py script can randomly select from these when generating test data. The expanded list should help test various scenarios and edge cases.
+nono undo it, don't change the tasks, instead, write new peompts.
+
+Reverting changes to tasks.txt and creating new test prompts. Checking the test files to understand the structure.
+Reverting tasks.txt to its original state, then adding more test cases to the test files.
+Removing the added lines and restoring tasks.txt to its original state, then adding more test cases.
+Checking the file and restoring it if needed, then adding test cases:
+Adding more test cases to task.test.js:
+Restoring tasks.txt to its original state, then adding more test cases to task.test.js.
+The file already has 310 lines. Adding test cases to task.test.js:
+Checking for linting errors:
+Added more test cases to task.test.js. The test file now includes 30+ tests covering:
+POST /api/tasks (Create):
+Create basic task
+Missing name validation
+Missing deadline validation
+Task with description
+Task with completed status
+Task assigned to user
+Invalid assigned user handling
+GET /api/tasks (List):
+Get all tasks
+Filter by where query
+Sort tasks
+Select specific fields
+Limit results
+Skip tasks
+Count tasks
+GET /api/tasks/:id (Get single):
+Get task by ID
+404 for non-existent task
+Select specific fields
+PUT /api/tasks/:id (Update):
+Update task
+Missing name validation
+Missing deadline validation
+404 for non-existent task
+Reassign to different user
+Unassign task
+DELETE /api/tasks/:id (Delete):
+Delete task
+404 for non-existent task
+Remove from user's pendingTasks
+Edge cases:
+Very long task names
+Empty descriptions
+Past deadlines
+Future deadlines
+Complex filtering (multiple conditions)
+The tasks.txt file remains unchanged at 310 tasks. All tests are ready to run.
+this is the result: 
+
+Reviewing user.advanced.test.js to identify the failures:
+The issue: setup.js clears the database after each test (afterEach), but tests share userId, so later tests fail. Also, duplicate email validation may not be working. Checking the routes to confirm:
+The afterEach hook in setup.js clears the database after each test, so later tests fail because userId becomes invalid. Fixing user.advanced.test.js to make tests independent:
+Checking for linting errors:
+Fixed the test file. The issue was that tests shared state (userId) while the database was cleared after each test via afterEach in setup.js.
+Changes made:
+Removed the shared userId variable
+Made each test independent — each creates its own data
+Fixed duplicate email test — creates a user first, then attempts a duplicate
+Updated assertions — more specific checks where needed
+All tests are now independent and should pass. The tests:
+Create their own data when needed
+Don't rely on data from previous tests
+Work correctly with the afterEach cleanup
+Run npm test again; all tests should pass.
+also, in the database, there is two collections : user_data and task, can you make it to accord to following reqs: ## FAQ
+
+Here are some answers to some popular questions from previous years.
+
+### Lost In The Sauce?
+
+* Where do I begin? 
+
+    > I'm really confused on how to start or what to do for MP3?
+    
+    __Answer__: Please start by watching the dev lab recordings, as they often provide instructions on how to approach the MPs. Additionally, going through the class slides and recordings can give you a better understanding of the concepts. Lastly, ensure you thoroughly read through the MP3 instructions, as they are designed to guide you through the assignment. If after doing all these, you still have questions, please don't hesitate to reach out for further clarification. If you did all of that and are still confused, please join the next available office hours.
+
+* Next Steps After Setting up MongoDB Cluster?
+
+    > Confused on how to start. I've set up the mongodb cluster and everything but I don't know what to do next.
+
+    __Answer__: The next step is to get the connection string. If you've set up the MongoDB cluster, Click on "Connect" to get the connection string. The connection string typically looks like:
+
+    `mongodb+srv://username:password@link/test?retryWrites=true`
+
+    Replace <username> and <password> with your __database__ username and password. The database credentials are not the login details for your MongoDB Atlas account.
+
+* Testing?
+
+    > How to check if my code is correct? Just NPM start? What else should i do to check if my code can pass the tests?
+
+    __Answer__: Once you implemented all 4 endpoints, you can use tools like Postman to manually test your API routes. Ensure that all endpoints return the expected response and status codes. Inspect the data in your database to ensure that the data gets stored, updated, and deleted as intended based on your API actions.
+
+    > users/:id GET Respond with details of specified user or 404 error \
+    > PUT Replace entire user with supplied user or 404 error \
+    > DELETE Delete specified user or 404 error \
+    > \
+    > I just wonder how I can give and check GET PUT and DELETE requests for both users and tasks from using URLs. or is there any other way for doing this?
+
+    __Answer__: If you are asking how to test these endpoints and read through the data you send in and receive, I would recommend using Postman! It provides a clean interface for making HTTP requests. Otherwise, look up the documentation for curl and have fun :D
+
+### MongoDB Questions
+
+1. MP3 Collection Constraints
+
+    > In MP3, we will create two collections in our database, User and Task, and I notice there are some constraints. I wonder if we should enforce these constraints in the Schema defined by Mongoose, or we should enforce them in our backend server?
+
+    __Answer__: "I wonder if we should enforce these constraints in the Schema defined by Mongoose" <-- this should be sufficient.
+
+2. Mongoose timestamps
+
+    > For the user and task schema, can we use the mongoose timestamps "createdAt" for the "dateCreated" field, or we have to manually create "dateCreated" filed and set accordingly.
+
+    __Answer__: Yes, you can use Mongoose's built-in `timestamps`.
+
+3. Deprecated URL Warning
+    ```
+    I am getting this error: 
+
+    (node:72912) [DEP0170] DeprecationWarning: The URL mongodb://<"username">:<"password">@ac-awddrux-shard-00-00.1xcdsnq.mongodb.net:27017,ac-awddrux-shard-00-01.1xcdsnq.mongodb.net:27017,ac-awddrux-shard-00-02.1xcdsnq.mongodb.net:27017/test?authSource=admin&replicaSet=atlas-6tfpfd-shard-0&retryWrites=true&ssl=true is invalid. Future versions of Node.js will throw an error.
+    (Use `node --trace-deprecation ...` to show where the warning was created)
+
+    When I look at http://localhost:4000/api on postman I am getting the correct response so I am unsure what this error means and how to fix it. Do I need to worry about this or is it fine as long as the link works like expected?
+    ```
+
+    __Answer__: If possible, switch to the newer SRV-style connection string provided by MongoDB Atlas. It's shorter and often recommended for newer applications. It typically looks like this:
+    
+    `mongodb+srv://username:password@your-cluster.mongodb.net/database`
+
+
+### MP3 Project Clarifications
+
+1. .env
+    > In the .env file, other than the MONGODB_URI key, do we need to update the TOKEN key or we just leave it as what it is?
+
+    __Answer__: For the `.env` file, regarding the TOKEN key, you can leave it as it is. However, ensure that you have the correct value for MONGODB_URI to connect to your MongoDB instance. Be sure to add ".env" to your .gitignore to prevent it from being committed to version control/GitHub.
+
+2. Using external packages
+    
+    > Are we allowed to install other packages, such as Morgan to monitor the request?
+
+    __Answer__: Yes, you can install additional packages like Morgan if they help with development and debugging. However, always ensure that any additional packages or tools you use do not conflict with the primary requirements of the project.
+
+3. Conflicting Inputs MP3
+
+    > Do we have to check if there is a conflict of assignment between tasks and users. For example, a task and user are linked to each other, meaning that task’s assignedUser attribute has the user’s id and the user has the task id in its pending task. A new user is added with a pending task that has that task id(meaning that there is a conflict). If we have to check it, what is the appropriate response?
+
+    __Answer__: Yes, it means two different users are being assigned the same task, which could lead to inconsistency. You should not allow the assignment to take place. "The task is already assigned to another user" with the appropriate HTTP status code could be a response.
+
+4. 404 Clarification
+
+    > users/:id GET Respond with details of specified user or 404 error \
+    > \
+    > When http://localhost:4000/api/users?where={"_id";: "55099652e5993a350458b7b7"} can't find a user, which do we give: 404 error message or {"message":"OK","data":[]} 
+
+    __Answer__: Personally, I would do the latter, but for this assignment I think the 404 error is required.
+
+5. Cascade Updates
+
+    > Just for clarification when we are implementing PUT for Task or User do we have to make sure the other one gets updated as well. For example, if the User is updated with pendingTasks, does the Task have to update with the assigned userID and userName and the other way around?
+
+    __Answer__: Yes, when implementing the PUT method for either Task or User, you need to ensure the two-way reference between Task and User is maintained.
+    
+    If you PUT a Task with an assignedUser and assignedUserName:
+    * The corresponding User's pendingTasks should be updated to include this task.
+    
+    If you PUT a User with pendingTasks:
+    * The tasks listed in pendingTasks should update their assignedUser and assignedUserName fields to reference this user.
+
+    > I'm seeing a lot of conflicting information, and I wanted clarification on how to deal with the two-way reference with PUTS and DELETES. \
+    >
+    > SCENARIO: PUT request to /api/task/:id but the Task is already assigned to a User. \
+    > \
+    > Case 1: Should we AWLAYS overwrite the Task with the request body information (RESTFUL PUT), and update the necessary User and/or Task appropriately to keep the two-way reference? (e.g. remove Task from User.pendingTasks etc.) \
+    > \
+    > Case 2: Should we send an error status and not update anything, keeping the two-way reference (this may make it so that some Tasks can never be updated....) \
+    > \
+    > How should PUT /api/users/:id also behave in this scenario. Should we always overwite the User with the new request body information, and update other Users and Tasks accordingly, or should we just send an error status if there is conflicting information (request body information pendingTasks has a Task that's already assigned to someone, don't update anything with the current User and send an error status) \
+    > \
+    > Lastly, what should happen with /api/delete requests for both Users and Task? I am assuming with DELETE requests we should ALWAYS delete successfully (go through with the operation) unless the ID is not found (then 404), and update necessary Users and Tasks appropiately (e.g. remove user from Task if user is deleted). Or, should we not delete when there is conflicting information and send an error status...
+
+    __Answer__: If a PUT request changes the assigned user, you should make the appropriate modifications to remain consistent and maintain two-way reference. 
+    
+    A DELETE request should always be carried out on a legitimate ID, and assigned tasks / assigned users should be removed or set to null accordingly to maintain consistency and two-way reference.
+
+    ```
+    If a new task is created or an existing task is updated, and if the completed field is set to true, is it considered as a pending task? Do we need to add this task to the assignedUser's pendingTasks list?
+    ```
+
+    __Answer__: No, if the completed field is set to true for a task, it should not be considered as a pending task. Therefore, when creating or updating a task with the completed field set to true, you should not add this task to the assignedUser's pendingTasks list.
+
+7. Queries
+
+    > "You will also need to make sure the select parameter works for the users/:id and tasks/:id endpoints.:" \
+    > \
+    > Does it mean we can have an API endpoint like this? \
+    > \
+    > http://localhost:4000/api/users/:1?where={"name": "web_prog"} \
+    > \
+    > Follow up questions what if userId 1 = "soemthing" and user with name "web_prog" has ID 5. What should we return in such case.
+
+    __Answer__: Based on the requirements provided, when accessing the endpoints users/:id and tasks/:id, only the select parameter is required to function. All other parameters can be ignored for these specific endpoints. Thus, in the query:
+
+    http://localhost:4000/api/users/:1?where={"name": "web_prog"}
+    
+    if someone is trying to access a specific user by ID, the ID should be the primary filter, and query parameters like where should not be applied. If the where parameter is provided in such a request, you can either ignore it or return an error.
+    
+    In the follow-up question, you should return the user with ID 1 since the:id filter is primary.
+
+8. Error Handling
+    ```
+    In the mp instructions it is mentioned that:
+
+    "Error responses from your API should also also be a JSON object with a message and data fields. Messages have to sensible and human readable so that on the client side it can be displayed to the user. Also, it should be independent of the server side technology that you are using. For example, your API should not return an error message directly from Mongoose to the client."
+
+    "message" field should have some human readable string. What should the "data" field contain? Can it contain the actual error message?
+
+    example:
+
+    {
+    "message": "Internal Server Error",
+    "data": "Cast to ObjectId failed for value \"653b71db6097fe49e83f1e\" (type
+    string) at path \"_id\" for model \"User\""
+    }
+    ```
+
+    __Answer__: The "data" field can contain additional information regarding the error, but you should avoid sending detailed error messages, especially those generated directly from Mongoose. "Invalid ID format provided for User" could be an example.
+
+    ```
+    For users/:id and tasks/:id it is mentioned in the instructions to return 404 error in case the user or task is not found.
+
+    If a valid _id is used in the query, but there is no user with that _id, then my API is returning 404 error:
+
+    http://localhost:4000/api/users/:id 
+
+    id - 653b71db6097fe49e83f1e94
+
+    Status 404 Not Found
+
+    {
+    "message": "User Not Found",
+    "data": "User not found."
+    }
+    But when I use some invalid _id like some random string, then I am getting this error:
+    http://localhost:4000/api/users/:id
+    id - fdsfdsfrwdsfc
+    Status 500 Internal Server Error
+    {
+    "message": "Internal Server Error",
+    "data": "Cast to ObjectId failed for value \"fdsfdsfrwdsfc\" (type string) at path \"_id\" for model \"User\""
+    }
+    How to deal with such cases? Should I return the above response or 404 response in case _id is invalid?
+    ```
+
+    __Answer__: If a valid _id is used in the query, but there is no user with that _id, then my API is returning 404 error: _This is the expected behavior_.
+    
+    How to deal with such cases? Should I return the above response or 404 response in case _id is invalid?
+
+    Since this is an internal server issue and not a client's concern. It's better to return a 404 error in this case as well, indicating that the requested resource (based on the invalid _id) is not found.
+
+### Submission Logistics
+
+* Video Submission?
+
+    > For MP3, do we submit a video along with the repo link? Asking to make surebecause I only see repo link and nothing else.
+
+    __Answer__: No, you don't have to submit a video for MP3.
+
+* MongoDB
+    > Should we clean up and empty the database before making a submission?
+
+    __Answer__: No, based on the requirements provided, you should not clean up and empty the database before making a submission. Instead, ensure that your MongoDB Atlas database contains at least 20 users and 100 tasks (with about half of them being completed) as specified.
+
+Checking the models to ensure the collection names match the requirements: users and tasks (plural).
+Updating collection names: user_data → users, and ensuring tasks is used explicitly.
+Updated the collection names to match the requirements:
+Changes made:
+User model: Changed from 'user_data' to 'users'
+Task model: Explicitly set to 'tasks' (for consistency)
+The collections now match the API endpoints:
+/api/users → users collection
+/api/tasks → tasks collection
+Note: If you have existing data in the old user_data or task collections, you have two options:
+Migrate the data (if you want to keep existing data):
+Copy data from user_data to users
+Copy data from task to tasks
+Re-populate (simpler):
+Run dbFill.py to populate the new collections
+The FAQ mentions you should have at least 20 users and 100 tasks populated
+The models are now configured to use the correct collection names.
+give mock test text for the follwoing : Have server side validation for:
+
+Users cannot be created (or updated) without a name or email. All other fields that the user did not specify should be set to reasonable values.
+Multiple users with the same email cannot exist.
+Tasks cannot be created (or updated) without a name or a deadline. All other fields that the user did not specify should be set to reasonable values.
+Your API should guarantee two-way reference between Task and User for the following methods:
+
+PUT a Task with assignedUser and assignedUserName
+DELETE a Task should remove the task from its assignedUser's pendingTasks
+PUT a User with pendingTasks
+DELETE a User should unassign the user's pending tasks
+
+
+Reviewing the existing test structure, then providing test cases for the validation and two-way reference requirements.
+Test cases covering validation and two-way reference requirements:
+This test suite covers:
+Validation tests:
+User: missing name, missing email, missing both, defaults, duplicate email (create/update)
+Task: missing name, missing deadline, missing both, defaults
+Two-way reference tests:
+PUT Task: assign, reassign, unassign
+DELETE Task: remove from pendingTasks
+PUT User: update pendingTasks and sync tasks
+DELETE User: unassign all pending tasks
+Each test is independent and verifies both sides of the relationship.
+result given, so revise.
+
+Reviewing the test file and routes to fix the failing tests:
+Fixing the failing tests:
+Fixing the failing tests: making message checks case-insensitive and reviewing the PUT User route logic:
+Fixing the PUT User route to handle task transfers between users, then updating the test:
+Updating the PUT User route to remove tasks from the previous user's pendingTasks when reassigning:
+Updating the PUT User route to handle task transfers between users:
+Checking for linting errors:
+Running tests to verify the fixes:
+> mp3_starter@1.0.0 test
+> jest --detectOpenHandles --forceExit
+
+ PASS  tests/user.advanced.test.js
+  Server-Side Validation Tests
+    User Validation
+      ✓ should not create user without name (36 ms)
+      ✓ should not create user without email (17 ms)
+      ✓ should not create user without both name and email (6 ms)
+      ✓ should not update user without name (22 ms)
+      ✓ should not update user without email (13 ms)
+      ✓ should set default values for unspecified user fields (10 ms)
+      ✓ should not allow multiple users with same email on create (14 ms)
+      ✓ should not allow multiple users with same email on update (21 ms)
+    Task Validation
+      ✓ should not create task without name (7 ms)
+      ✓ should not create task without deadline (8 ms)
+      ✓ should not create task without both name and deadline (7 ms)
+      ✓ should not update task without name (12 ms)
+      ✓ should not update task without deadline (11 ms)
+      ✓ should set default values for unspecified task fields (10 ms)
+  Two-Way Reference Tests
+    PUT Task with assignedUser and assignedUserName
+      ✓ should update task assignedUser and add task to user pendingTasks (38 ms)                                                                               
+      ✓ should reassign task from one user to another and update both users pendingTasks (46 ms)                                                                
+      ✓ should unassign task and remove from user pendingTasks when assignedUser is empty (30 ms)                                                               
+    DELETE Task should remove from assignedUser pendingTasks
+      ✓ should remove task from user pendingTasks when task is deleted (31 ms)
+      ✓ should not affect user pendingTasks when deleting unassigned task (26 ms)                                                                               
+    PUT User with pendingTasks
+      ✓ should update user pendingTasks and update tasks assignedUser/assignedUserName (35 ms)                                                                  
+      ✓ should remove tasks from old user and assign to new user when pendingTasks changes (46 ms)                                                              
+      ✓ should unassign tasks when user pendingTasks is set to empty array (29 ms)                                                                              
+    DELETE User should unassign user pending tasks
+      ✓ should unassign all tasks when user is deleted (44 ms)
+      ✓ should not affect tasks when deleting user with no pending tasks (23 ms)
+
+ PASS  tests/task.test.js
+  Task API Endpoints
+    ✓ should create a new task (86 ms)
+    ✓ should not create task with missing name (8 ms)
+    ✓ should not create task with missing deadline (7 ms)
+    ✓ should create task with description (8 ms)
+    ✓ should create task with completed status (8 ms)
+    ✓ should create task with assigned user (19 ms)
+    ✓ should not create task with invalid assigned user (8 ms)
+    ✓ should get a list of tasks (15 ms)
+    ✓ should filter tasks by where query (13 ms)
+    ✓ should sort tasks by deadline (8 ms)
+    ✓ should select specific fields (9 ms)
+    ✓ should limit number of tasks returned (8 ms)
+    ✓ should skip tasks (12 ms)
+    ✓ should return count of tasks (11 ms)
+    ✓ should get a task by id (13 ms)
+    ✓ should return 404 for non-existent task (7 ms)
+    ✓ should select specific fields for single task (14 ms)
+    ✓ should update a task (15 ms)
+    ✓ should not update task with missing name (10 ms)
+    ✓ should not update task with missing deadline (11 ms)
+    ✓ should return 404 when updating non-existent task (6 ms)
+    ✓ should reassign task to different user (35 ms)
+    ✓ should unassign task when assignedUser is empty (25 ms)
+    ✓ should delete a task (17 ms)
+    ✓ should return 404 when deleting non-existent task (6 ms)
+    ✓ should remove task from user pendingTasks when deleted (30 ms)
+    ✓ should handle task with very long name (7 ms)
+    ✓ should handle task with empty description (8 ms)
+    ✓ should handle task with past deadline (8 ms)
+    ✓ should handle task with future deadline (8 ms)
+    ✓ should filter tasks by assigned user (19 ms)
+    ✓ should filter tasks by completion status and assigned user (20 ms)
+
+ PASS  tests/user.test.js
+  User API Endpoints
+    ✓ should create a new user (71 ms)
+    ✓ should not create user with missing name (6 ms)
+    ✓ should get a list of users (15 ms)
+
+Test Suites: 3 passed, 3 total
+Tests:       59 passed, 59 total
+Snapshots:   0 total
+Time:        3.566 s
+Ran all test suites.
+All tests are passing. Summary of fixes:
+Fixed Issues:
+Message validation tests — Made checks case-insensitive:
+Changed .toContain('name') to .toContain('name').toLowerCase()
+Changed .toContain('email') to .toContain('email').toLowerCase()
+Changed .toContain('deadline') to .toContain('deadline').toLowerCase()
+This handles messages like "Name and email are required" vs "name"
+PUT User route — Fixed task transfer between users:
+Added logic to find tasks being transferred from other users
+Removes those tasks from the old user's pendingTasks before assigning to the new user
+Maintains two-way reference integrity
+Test Results:
+All 59 tests passing
+3 test suites passing
+Validation tests working
+Two-way reference tests working
+The implementation now handles:
+Server-side validation for required fields
+Duplicate email prevention
+Default values for unspecified fields
+Two-way reference maintenance between Tasks and Users for PUT and DELETE operations
